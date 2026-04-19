@@ -1,0 +1,444 @@
+<!-- Get tutorial set -->
+
+
+<!-- Tutorial root -->
+
+
+
+    <!-- Desktop tutorial set -->
+    
+        
+    
+
+                    
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+    <head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VP5RSQ168Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VP5RSQ168Y');
+</script>
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="Lazy Foo' Productions SDL 3 vsync frame rate C++ Tutorial 2D Windows Linux Mac">
+<meta name="description" content="Learn how to manage frame rate.">
+
+<link href="../../../assets/style.css" rel="stylesheet">
+<script src="../../../assets/bootstrap-5.3.0-alpha1-dist/js/bootstrap.bundle.min.js"></script>
+
+<title>Lazy Foo' Productions - Frame Rate and VSync</title>
+
+<script src="../../../assets/light-dark-loader.js"></script>
+
+
+    </head>
+    
+    <body>
+
+        
+<header>
+
+<h1 class="text-center">Lazy Foo' Productions</h1>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://discourse.libsdl.org/">SDL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/SDL/index.php">SDL2 Tutorials</a>
+    <a class="mx-2" href="../index.php.html">SDL3 Tutorials</a>
+    <a class="mx-2" href="https://lazyfoo.net/articles/index.php">Articles</a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/OpenGL/index.php">OpenGL Tutorials</a>
+    <a class="mx-2" href="https://www.opengl.org/discussion_boards/forum.php">OpenGL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.bsky.social">Follow BlueSky</a>
+    <a class="mx-2" href="https://www.facebook.com/lazyfooproductions/">Follow Facebook</a>
+    <a class="mx-2" href="https://twitter.com/lazyfoo_net">Follow Twitter</a>
+    <a class="mx-2" href="https://www.threads.net/@lazyfoo.productions">Follow Threads</a>
+</div>
+
+<div class="container justify-content-center text-center my-2 text-break">
+    <a class="mx-2" href="https://lazyfoo.net/donate.php" id="donationLink">Donate</a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.net/index.php">News</a>
+    <a class="mx-2" href="https://lazyfoo.net/faq.php">FAQs</a>
+    <a class="mx-2" href="https://lazyfoo.net/contact.php">Contact</a>
+    <a class="mx-2" href="https://lazyfoo.net/bugs.php">Bugs</a>
+</div>
+
+
+<nav class="container">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880704953225255"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5880704953225255"
+         data-ad-slot="7546677284"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</nav>
+
+<br/>
+
+<nav class="container">
+		<script async src="https://cse.google.com/cse.js?cx=f01a79f66150b448d">
+		</script>
+		<div class="gcse-search"></div>
+</nav>
+
+
+</header>
+
+
+        
+        <main>
+            <div class="container">
+                
+                    
+                        <div class="container border py-3 my-3">
+    <h1 class="text-center">Frame Rate and VSync</h1>
+    
+        <div class="text-center"><img class="img-fluid" src="preview.png" alt="Frame Rate and VSync screenshot"></div>
+    
+    <p class="text-center"><b>Last Updated: Jun 8th, 2025</b></p>
+    
+        Odds are if you tried to any motion with SDL, everything ran incredibly fast. Here we're going to use a few tools to manage frame rate.
+
+    
+    
+</div>
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">/* Constants */
+//Screen dimension constants
+constexpr int kScreenWidth{ 640 };
+constexpr int kScreenHeight{ 480 };
+constexpr int kScreenFps{ 60 };
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">We're going to define a constant to define the frames per second we want to cap the frame rate to.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">        //Create window with renderer
+        //Create window with renderer
+        if( SDL_CreateWindowAndRenderer( "SDL3 Tutorial: Frame Rate and VSync", kScreenWidth, kScreenHeight, 0, &gWindow, &gRenderer ) == false )
+        {
+            SDL_Log( "Window could not be created! SDL error: %s\n", SDL_GetError() );
+            success = false;
+        }
+        else
+        {
+            //Enable VSync
+            if( SDL_SetRenderVSync( gRenderer, 1 ) == false )
+            {
+                SDL_Log( "Could not enable VSync! SDL error: %s\n", SDL_GetError() );
+                success = false;
+            }
+
+            //Initialize font loading
+            if( TTF_Init() == false )
+            {
+                SDL_Log( "SDL_ttf could not initialize! SDL_ttf error: %s\n", SDL_GetError() );
+                success = false;
+            }
+        }
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">After we create our window/renderer, we're going to enable VSync with <a href="https://wiki.libsdl.org/SDL3/SDL_SetRenderVSync">SDL_SetRenderVSync</a>. VSync means the screen will update when the monitor updates. Monitors update from top to bottom AKA vertically, this is why it's
+called vertical sync. Here we're doing basic enabling of VSync but there are more options for VSync if you look in the SDL documentation. 
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">            //The quit flag
+            bool quit{ false };
+
+            //The event data
+            SDL_Event e;
+            SDL_zero( e );
+
+            //VSync toggle
+            bool vsyncEnabled{ true };
+
+            //FPS cap toggle
+            bool fpsCapEnabled{ false };
+
+            //Timer to cap frame rate
+            LTimer capTimer;
+
+            //Time spent rendering
+            Uint64 renderingNS{ 0 };
+
+            //In memory text stream
+            std::stringstream timeText;
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Before entering the main loop we have some variables we want to define.<br/>
+<br/>
+First we have some toggles to enable/disable vsync/FPS capping. Then we have a timer to cap the frame rate, a nanosecond time variable to keep track of how long the rendering time was and a string stream to display the FPS info.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">            //The main loop
+            while( quit == false )
+            {
+                //Start frame time
+                capTimer.start();
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Going into the main loop  we start the timer used to cap the frame rate.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">                //Get event data
+                while( SDL_PollEvent( &e ) == true )
+                {
+                    //If event is quit type
+                    if( e.type == SDL_EVENT_QUIT )
+                    {
+                        //End the main loop
+                        quit = true;
+                    }
+                    //Reset start time on return keypress
+                    else if( e.type == SDL_EVENT_KEY_DOWN )
+                    {
+                        //VSync toggle
+                        if( e.key.key == SDLK_RETURN )
+                        {
+                            vsyncEnabled = !vsyncEnabled;
+                            SDL_SetRenderVSync( gRenderer, ( vsyncEnabled ) ? 1 : SDL_RENDERER_VSYNC_DISABLED );
+                        }
+                        //FPS cap toggle
+                        else if( e.key.key == SDLK_SPACE )
+                        {
+                            fpsCapEnabled = !fpsCapEnabled;
+                        }
+                    }
+                }
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">For this demo, we'll toggle VSync when enter is pressed and FPS capping with the space bar.<br/>
+<br/>
+If you're wondering what's up with the funky syntax in the call to <code>SDL_SetRenderVSync</code>, that's the ternary operator. The way it works is that it evaluates the condition and returns a value like so:<br/>
+<br/>
+<code>( &#060condition&#062 ) ? &#060value returned if condition is true&#062 : &#060value returned if condition is false&#062</code><br/>
+<br/>
+Some people aren't fans of the ternary operator because they say it makes things messy (I worked at companies that banned it as part of their coding standards), but just as long as you don't use it to obessively get everything in one line you should be fine.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">                //Update text
+                if( renderingNS != 0 )
+                {
+                    double framesPerSecond{ 1000000000.0 / static_cast<double>( renderingNS ) };
+
+                    timeText.str( "" );
+                    timeText << "Frames per second " << ( vsyncEnabled ? "(VSync) " : "" ) << ( fpsCapEnabled ? "(Cap) " : "" ) << framesPerSecond; 
+                    SDL_Color textColor{ 0x00, 0x00, 0x00, 0xFF };
+                    gFpsTexture.loadFromRenderedText( timeText.str().c_str(), textColor );
+                }
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">After handling inputs we check if at least one frame rendered because we need at least one frame rendered in order to calculate frames per second. We can tell if a frame has been rendered if <code>renderingNS</code> is set because it is set at the end of the frame.<br/>
+<br/>
+The way we calculate the current frame rate is <code>nanoseconds per second/time spent rendering in nanoseconds</code> (remember a nanosecond is a billionth of a second). Here we're casting the variables to doubles to avoid any funkyness from dividing integers with doubles.<br/>
+<br/>
+So if it takes 10,000,000 nanoseconds to render a frame, the calculation ends up being <code>1,000,000,000 nanoseconds per second/10,000,000 nanoseconds per frame = 100 frames per second</code>.<br/>
+<br/>
+Here we assemble a string letting the user know if VSync/FPS capping is enabled (again using the ternary operator) and we append the frames per second.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">                //Fill the background
+                SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF,  0xFF );
+                SDL_RenderClear( gRenderer );
+
+                //Draw text
+                gFpsTexture.render( ( kScreenWidth - gFpsTexture.getWidth() ) / 2.f,  ( kScreenHeight - gFpsTexture.getHeight() ) / 2.f );
+
+                //Update screen
+                SDL_RenderPresent( gRenderer );
+
+                //Get time to render frame
+                renderingNS = capTimer.getTicksNS();
+
+                //If time remaining in frame
+                constexpr Uint64 nsPerFrame = 1000000000 / kScreenFps; 
+                if( fpsCapEnabled && renderingNS < nsPerFrame)
+                {
+                    //Sleep remaining frame time
+                    Uint64 sleepTime = nsPerFrame - renderingNS;
+                    SDL_DelayNS( nsPerFrame - renderingNS );
+
+                    //Get frame time including sleep time
+                    renderingNS = capTimer.getTicksNS();
+                }
+            } 
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">After we finish rendering we store the time spent rendering immediately after updating the screen. The reason we store the time is because nanoseconds is a very precise way to measure time and it's possible to call <code>getTicksNS</code> twice in a row and get a different value. So we store the value
+immediately after we're done rendering the frame to get the most accurate results.<br/>
+<br/>
+Then we calculate the time to render a frame, which at 60 FPS should be about 16666666.6667 nanoseconds. If we want to cap the frame rate at 60 FPS, we want to make sure we spend 16666666.6667 nanoseconds each frame. If the frame rendering took (for example) 6666666.6667, we want it to sleep for 10000000
+nanoseconds, which we do with <a href="https://wiki.libsdl.org/SDL3/SDL_DelayNS">SDL_DelayNS</a>. After we sleep we make sure to get the frame time again to make sure our time spent sleeping is accounted into the frame time.<br/>
+<br/>
+Now when you run this application, odds are you're going to get just under 60 FPS in your calculation. That's expected due to rounding errors. <code>SDL_DelayNS</code> is not going to sleep 0.6667 nanoseconds and I doubt any user will notice 2/3rds of a nanosecond latency.
+</div>
+
+
+
+                    
+                
+                    
+                        <div class="container border py-3 mt-3 mb-5">
+
+<a href="12-frame-rate-and-vsync.zip">Download the media and source code for this demo here.</a><br/>
+<br/>
+
+
+
+
+
+
+
+
+<a href="../index.php.html#Frame Rate and VSync">Back to Index</a>
+
+
+</div>
+                    
+                
+                    
+                        <div class="container border border-secondary rounded py-3 mb-3">
+<p>Addendum: <i>8K 500FPS with HDR and ray tracing</i></p>
+<div class="">
+Part of teaching new game developers how to code games is getting it into their heads that the junk GPU vendors told them to sell them an expensive video cards is not what's most important when learning game/graphics programming. When you get into graphics programming, you learn a lot
+of the stuff you get told in latest nVidia/AMD trailers is not as high priority as the game/graphics fundamentals.<br/>
+<br/>
+This means don't bother trying to max the specs of your Nasty Tetris clone. Nobody who is going to look at your portfolio is going to care if it runs at 480p/30FPS or 8k/500FPS unless you really screwed up your performance by doing some overly complicated video effect badly which
+won't happen if you don't over engineer your game.
+
+</div>
+</div>
+                    
+                
+            </div>
+        </main>
+        
+<footer class="my-3 py-3">
+    
+<nav class="container">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880704953225255"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5880704953225255"
+         data-ad-slot="7546677284"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</nav>
+
+    <div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://discourse.libsdl.org/">SDL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/SDL/index.php">SDL2 Tutorials</a>
+    <a class="mx-2" href="../index.php.html">SDL3 Tutorials</a>
+    <a class="mx-2" href="https://lazyfoo.net/articles/index.php">Articles</a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/OpenGL/index.php">OpenGL Tutorials</a>
+    <a class="mx-2" href="https://www.opengl.org/discussion_boards/forum.php">OpenGL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.bsky.social">Follow BlueSky</a>
+    <a class="mx-2" href="https://www.facebook.com/lazyfooproductions/">Follow Facebook</a>
+    <a class="mx-2" href="https://twitter.com/lazyfoo_net">Follow Twitter</a>
+    <a class="mx-2" href="https://www.threads.net/@lazyfoo.productions">Follow Threads</a>
+</div>
+
+<div class="container justify-content-center text-center my-2 text-break">
+    <a class="mx-2" href="https://lazyfoo.net/donate.php" id="donationLink">Donate</a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.net/index.php">News</a>
+    <a class="mx-2" href="https://lazyfoo.net/faq.php">FAQs</a>
+    <a class="mx-2" href="https://lazyfoo.net/contact.php">Contact</a>
+    <a class="mx-2" href="https://lazyfoo.net/bugs.php">Bugs</a>
+</div>
+
+	<aside class="text-center">
+    Copyright Lazy Foo' Productions 2004-2026<br/>
+    <br/>
+    <button type="button" class="btn btn-light my-10" id="btnToggle">Light Mode</button>
+    </aside>
+
+    <script src="../../../assets/donors.js"></script>
+    <script src="../../../assets/light-dark-toggle.js"></script>
+
+</footer>
+
+    </body>
+</html>

@@ -1,0 +1,603 @@
+<!-- Get tutorial set -->
+
+
+<!-- Tutorial root -->
+
+
+
+    <!-- Desktop tutorial set -->
+    
+        
+    
+
+                    
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+    <head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VP5RSQ168Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VP5RSQ168Y');
+</script>
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="Lazy Foo' Productions SDL 3 audio music sound effects C++ Tutorial 2D Windows Linux Mac">
+<meta name="description" content="Play music and sound effects with SDL_mixer.">
+
+<link href="../../../assets/style.css" rel="stylesheet">
+<script src="../../../assets/bootstrap-5.3.0-alpha1-dist/js/bootstrap.bundle.min.js"></script>
+
+<title>Lazy Foo' Productions - Sound Effects and Music</title>
+
+<script src="../../../assets/light-dark-loader.js"></script>
+
+
+    </head>
+    
+    <body>
+
+        
+<header>
+
+<h1 class="text-center">Lazy Foo' Productions</h1>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://discourse.libsdl.org/">SDL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/SDL/index.php">SDL2 Tutorials</a>
+    <a class="mx-2" href="../index.php.html">SDL3 Tutorials</a>
+    <a class="mx-2" href="https://lazyfoo.net/articles/index.php">Articles</a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/OpenGL/index.php">OpenGL Tutorials</a>
+    <a class="mx-2" href="https://www.opengl.org/discussion_boards/forum.php">OpenGL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.bsky.social">Follow BlueSky</a>
+    <a class="mx-2" href="https://www.facebook.com/lazyfooproductions/">Follow Facebook</a>
+    <a class="mx-2" href="https://twitter.com/lazyfoo_net">Follow Twitter</a>
+    <a class="mx-2" href="https://www.threads.net/@lazyfoo.productions">Follow Threads</a>
+</div>
+
+<div class="container justify-content-center text-center my-2 text-break">
+    <a class="mx-2" href="https://lazyfoo.net/donate.php" id="donationLink">Donate</a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.net/index.php">News</a>
+    <a class="mx-2" href="https://lazyfoo.net/faq.php">FAQs</a>
+    <a class="mx-2" href="https://lazyfoo.net/contact.php">Contact</a>
+    <a class="mx-2" href="https://lazyfoo.net/bugs.php">Bugs</a>
+</div>
+
+
+<nav class="container">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880704953225255"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5880704953225255"
+         data-ad-slot="7546677284"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</nav>
+
+<br/>
+
+<nav class="container">
+		<script async src="https://cse.google.com/cse.js?cx=f01a79f66150b448d">
+		</script>
+		<div class="gcse-search"></div>
+</nav>
+
+
+</header>
+
+
+        
+        <main>
+            <div class="container">
+                
+                    
+                        <div class="container border py-3 my-3">
+    <h1 class="text-center">Sound Effects and Music</h1>
+    
+        <div class="text-center"><img class="img-fluid" src="preview.png" alt="Sound Effects and Music screenshot"></div>
+    
+    <p class="text-center"><b>Last Updated: Nov 10th, 2025</b></p>
+    
+        SDL's base audio is <a href="https://wiki.libsdl.org/SDL3/CategoryAudio">complex to say the least</a>. The SDL_mixer extension library makes it 
+much easier to play music and sound effects.<br/>
+<br/>
+At time of writing, SDL3_mixer is not out yet and in order to get this to run you need to be able to build it from source because SDL2_mixer will 
+not work with SDL3. At time of writing, you will also need to build the latest version of SDL3 because SDL3_mixer is dependent on changes to SDL3.<br/>
+<br/>
+This tutorial uses SDL3_mixer SHA 4182794ea45fe28568728670c6f1583855d0e85c and SDL3 SHA cecf4b0d4e771fea01ecbd0594a948ee0f872fb5. You'll want to make
+sure you use those commit SHAs or newer until SDL3_mixer is officially released.
+
+    
+    
+</div>
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">//Using SDL, SDL_image, SDL_mixer, and STL string
+#include &#60SDL3/SDL.h&#62
+#include &#60SDL3/SDL_main.h&#62
+#include &#60SDL3_image/SDL_image.h&#62
+#include &#60SDL3_mixer/SDL_mixer.h&#62
+#include &#60string&#62
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">We're going to be using the SDL_mixer extension library so make sure it's set up in your project.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">//The window we'll be rendering to
+SDL_Window* gWindow{ nullptr };
+
+//The renderer used to draw to the window
+SDL_Renderer* gRenderer{ nullptr };
+
+//Instruction texture
+LTexture gPromptTexture;
+
+//The mixer to output to
+MIX_Mixer* gMixer{ nullptr };
+
+//The track containing music that will be played
+MIX_Track* gMusicTrack{ nullptr };
+
+//The sound effects that will be used
+MIX_Audio* gScratchAudio{ nullptr };
+MIX_Audio* gHighAudio{ nullptr };
+MIX_Audio* gMediumAudio{ nullptr };
+MIX_Audio* gLowAudio{ nullptr };
+
+//The track the sound effects will be played on
+MIX_Track* gEffectTrack{ nullptr };
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">In our global variables we declare a <a href="https://wiki.libsdl.org/SDL3_mixer/MIX_Mixer">MIX_Mixer</a> audio mixer. If you're going to be 
+playing multiple audio effects while playing music, you need something to mix the audio so it can be played on an audio device like your headset.
+<br/><br/> 
+Then we declare a <a href="https://wiki.libsdl.org/SDL3_mixer/MIX_Track">MIX_Track</a> for our music. Those of you familiar with SDL2_mixer, 
+the <code>MIX_Track</code> are a replacement for channels.<br/>
+<br/>
+Lastly, for our group of sound effects, we declare a <a href="https://wiki.libsdl.org/SDL3_mixer/MIX_Audio">MIX_Audio</a> for each of our sound 
+effects and a track to play them on.<br/>
+<br/>
+If it's a bit confusing right now, just understand that <code>MIX_Audio</code> gets played on a <code>MIX_Track</code> which is mixed by a 
+<code>MIX_Mixer</code> so you can hear it on audio device.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">bool init()
+{
+    //Initialization flag
+    bool success{ true };
+
+    //Initialize SDL with audio
+    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO ) == false )
+    {
+        SDL_Log( "SDL could not initialize! SDL error: %s\n", SDL_GetError() );
+        success = false;
+    }
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">When using SDL_mixer or SDL audio in general, make sure to pass <a href="https://wiki.libsdl.org/SDL3/SDL_INIT_AUDIO">SDL_INIT_AUDIO</a> to
+<a href="https://wiki.libsdl.org/SDL3/SDL_Init">SDL_Init</a>.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">    {
+        //Create window with renderer
+        if( SDL_CreateWindowAndRenderer( "SDL3 Tutorial: Sound Effects and Music", kScreenWidth, kScreenHeight, 0, &gWindow, &gRenderer ) == false )
+        {
+            SDL_Log( "Window could not be created! SDL error: %s\n", SDL_GetError() );
+            success = false;
+        }
+        else
+        {
+            //Initialize SDL_mixer
+            if( MIX_Init() == false )
+            {
+                SDL_Log( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", SDL_GetError() );
+                success = false;
+            }
+            else
+            {
+                //Create mixer 
+                if( gMixer = MIX_CreateMixerDevice( SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr ); gMixer == nullptr )
+                {
+                    SDL_Log( "SDL_mixer could not create mixer! SDL_mixer Error: %s\n", SDL_GetError() );
+                    success = false;
+                }
+            }
+        }
+    }
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Much like how we had to initialize SDL_ttf, we need to initialize SDL_mixer.<br/>
+<br/>
+First we initialize SDL_mixer with <a href="https://wiki.libsdl.org/SDL3_mixer/MIX_Init">MIX_Init</a>. Then we create a mixer using
+<a href="https://wiki.libsdl.org/SDL3_mixer/MIX_CreateMixerDevice">MIX_CreateMixerDevice</a>.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">bool loadMedia()
+{
+    //File loading flag
+    bool success{ true };
+
+    //Load scene image
+    if( gPromptTexture.loadFromFile( "15-sound-effects-and-music/prompt.png" ) == false )
+    {
+        SDL_Log( "Unable to load prompt image!\n" );
+        success = false;
+    }
+
+    //Load sound effects
+    if( gScratchAudio = MIX_LoadAudio( gMixer, "15-sound-effects-and-music/scratch.wav", true ); gScratchAudio == nullptr )
+    {
+        SDL_Log( "Unable to load scratch sound! SDL_mixer error: %s\n", SDL_GetError() );
+        success = false;
+    }
+    if( gHighAudio = MIX_LoadAudio( gMixer, "15-sound-effects-and-music/high.wav", true ); gHighAudio == nullptr )
+    {
+        SDL_Log( "Unable to load high sound! SDL_mixer error: %s\n", SDL_GetError() );
+        success = false;
+    }
+    if( gMediumAudio = MIX_LoadAudio( gMixer, "15-sound-effects-and-music/medium.wav", true ); gMediumAudio == nullptr )
+    {
+        SDL_Log( "Unable to load medium sound! SDL_mixer error: %s\n", SDL_GetError() );
+        success = false;
+    }
+    if( gLowAudio = MIX_LoadAudio( gMixer, "15-sound-effects-and-music/low.wav", true ); gLowAudio == nullptr )
+    {
+        SDL_Log( "Unable to load low sound! SDL_mixer error: %s\n", SDL_GetError() );
+        success = false;
+    }
+
+    //Create track for sound effects
+    if( gHighAudio != nullptr && gMediumAudio != nullptr && gLowAudio != nullptr )
+    {
+        if( gEffectTrack = MIX_CreateTrack( gMixer ); gEffectTrack == nullptr )
+        {
+            SDL_Log( "Failed to create sound effect track! SDL_mixer Error: %s\n", SDL_GetError() );
+            success = false;
+        }
+    }
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">In our file loading function we load our send effects with <a href="https://wiki.libsdl.org/SDL3_mixer/MIX_LoadAudio">MIX_LoadAudio</a>. After all 
+our effects are loaded, we create a track for them to play on using
+<a href="https://wiki.libsdl.org/SDL3_mixer/MIX_CreateTrack">MIX_CreateTrack</a>.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">    //Load music audio
+    if( MIX_Audio* musicAudio = MIX_LoadAudio( gMixer, "15-sound-effects-and-music/beat.wav", false ); musicAudio == nullptr )
+    {
+        SDL_Log( "Unable to load music! SDL_mixer error: %s\n", SDL_GetError() );
+        success = false;
+    }
+    else
+    {
+        //Create track for music
+        if( gMusicTrack = MIX_CreateTrack( gMixer ); gMusicTrack == nullptr )
+        {
+            SDL_Log( "Failed to create music track! SDL_mixer Error: %s\n", SDL_GetError() );
+            success = false;
+        }
+        else
+        {
+            //Set audio for track
+            MIX_SetTrackAudio( gMusicTrack, musicAudio );
+        }
+
+        //The track will hold a reference count
+        MIX_DestroyAudio( musicAudio );
+    }
+
+    return success;
+}
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">For our music, we load the audio just like the sound effects, we create a track for it just like the sound effects, but this time we call
+<a href="https://wiki.libsdl.org/SDL3_mixer/MIX_SetTrackAudio">MIX_SetTrackAudio</a> to bind the music audio to the music track.<br/>
+<br/>
+SDL_mixer uses reference counting so it will destroy the <code>MIX_Audio</code> for the music when the music is no longer assigned to the
+<code>MIX_Track</code>. This means we can call <a href="https://wiki.libsdl.org/SDL3_mixer/MIX_DestroyAudio">MIX_DestroyAudio</a> after loading the
+<code>MIX_Audio</code> for the music.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">void close()
+{
+    //Free music track
+    MIX_DestroyTrack( gMusicTrack );
+    gMusicTrack = nullptr;
+
+    //Sound effect track
+    MIX_DestroyTrack( gEffectTrack );
+    gEffectTrack = nullptr;
+
+    //Free sound effects
+    MIX_DestroyAudio( gScratchAudio );
+    gScratchAudio = nullptr;
+    MIX_DestroyAudio( gHighAudio );
+    gHighAudio = nullptr;
+    MIX_DestroyAudio( gMediumAudio );
+    gMediumAudio = nullptr;
+    MIX_DestroyAudio( gLowAudio );
+    gLowAudio = nullptr;
+
+    //Free the mixer
+    MIX_DestroyMixer( gMixer );
+    gMixer = nullptr;
+
+    //Clean up textures
+    gPromptTexture.destroy();
+
+    //Destroy window
+    SDL_DestroyRenderer( gRenderer );
+    gRenderer = nullptr;
+    SDL_DestroyWindow( gWindow );
+    gWindow = nullptr;
+
+    //Quit SDL subsystems
+    MIX_Quit();
+    SDL_Quit();
+}
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">In our clean up function, we need to make sure to free tracks with 
+<a href="https://wiki.libsdl.org/SDL3_mixer/MIX_DestroyTrack">MIX_DestroyTrack</a>,
+free audio with <a href="https://wiki.libsdl.org/SDL3_mixer/MIX_DestroyAudio">MIX_DestroyAudio</a>, free the mixer with
+<a href="https://wiki.libsdl.org/SDL3_mixer/MIX_DestroyMixer">MIX_DestroyMixer</a>, and quit SDL_mixer with 
+<a href="https://wiki.libsdl.org/SDL3_mixer/MIX_Quit">MIX_Quit</a>.`
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">                        switch( e.key.key )
+                        {
+                            //Play high sound effect
+                            case SDLK_1:
+                            MIX_SetTrackAudio( gEffectTrack, gHighAudio );
+                            MIX_PlayTrack( gEffectTrack, 0 );
+                            break;
+                            
+                            //Play medium sound effect
+                            case SDLK_2:
+                            MIX_SetTrackAudio( gEffectTrack, gMediumAudio );
+                            MIX_PlayTrack( gEffectTrack, 0 );
+                            break;
+                            
+                            //Play low sound effect
+                            case SDLK_3:
+                            MIX_SetTrackAudio( gEffectTrack, gLowAudio );
+                            MIX_PlayTrack( gEffectTrack, 0 );
+                            break;
+                            
+                            //Play scratch sound effect with track
+                            case SDLK_4:
+                            MIX_SetTrackAudio( gEffectTrack, gScratchAudio );
+                            MIX_PlayTrack( gEffectTrack, 0 );
+                            break;
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">When we press one of the sound effect buttons, we bind the sound effect to the sound effect track using <code>MIX_SetTrackAudio</code> and play
+the track using <a href="https://wiki.libsdl.org/SDL3_mixer/MIX_PlayTrack">MIX_PlayTrack</a>.<br/>
+<br/>
+The way this demo is set up, all the sound effects share a single track. You don't need to design things that way. What it practically means is
+that if you were to play the scratch sound effect and then immediately play another sound effect, it will halt the scratch sound effect so the
+other sound effect can use the track. If you were to play the scratch sound effect and then quickly play it again, it would stop the first play
+of the scratch sound effect and start a new one because a track can only play one audio at a time.<br/>
+<br/>
+You could have one track per effect. You can even not allocate tracks yourself and let SDL_mixer handle it with
+<a href="https://wiki.libsdl.org/SDL3_mixer/MIX_PlayAudio">MIX_PlayAudio</a>. If you were to play the audio with <code>MIX_PlayAudio</code>, it
+would play a track per audio play. If you were to call <code>MIX_PlayAudio</code> multiple times, it would have the audio clip being played multiple
+times simulatenously.<br/>
+<br/>
+Ultimately, it comes down to how you want to design your audio playing. Odds are you don't want a character to be playing multiple voice lines
+simulatenously, but you're probably more OK with a character setting off multiple sound effects.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">                            case SDLK_9:
+                            //If there is no music playing
+                            if( MIX_TrackPlaying( gMusicTrack ) == false && MIX_TrackPaused( gMusicTrack ) == false )
+                            {
+                                //Play the music
+                                SDL_PropertiesID props = SDL_CreateProperties();
+                                SDL_SetNumberProperty( props, MIX_PROP_PLAY_LOOPS_NUMBER, -1 );
+                                MIX_PlayTrack( gMusicTrack, props );
+                                SDL_DestroyProperties( props );
+                            }
+                            //If music is being played
+                            else
+                            {
+                                //If the music is paused
+                                if( MIX_TrackPaused( gMusicTrack ) == true )
+                                {
+                                    //Resume the music
+                                    MIX_ResumeTrack( gMusicTrack );
+                                }
+                                //If the music is playing
+                                else
+                                {
+                                    //Pause the music
+                                    MIX_PauseTrack( gMusicTrack );
+                                }
+                            }
+                            break;
+                            
+                            //Stop the music
+                            case SDLK_0:
+                            MIX_StopTrack( gMusicTrack, 0 );
+                            break;
+                        }
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">When pressing the play button, we want to make sure the music isn't playing or paused using
+<a href="https://wiki.libsdl.org/SDL3_mixer/MIX_TrackPlaying">MIX_TrackPlaying</a> and
+<a href="https://wiki.libsdl.org/SDL3_mixer/MIX_TrackPaused">MIX_TrackPaused</a> respectively. If it isn't playing/plaused, we play the track
+while passing in the properties stating we want to loop using <code>MIX_PROP_PLAY_LOOPS_NUMBER</code>.<br/>
+<br/>
+If the music is playing/paused, we check if it's paused. If it paused, we resume it. Otherwise, we pause it. Lastly, when we want to stop the music,
+we just call <a href="https://wiki.libsdl.org/SDL3_mixer/MIX_StopTrack">MIX_StopTrack</a>.
+</div>
+
+
+
+                    
+                
+                    
+                        <div class="container border py-3 mt-3 mb-5">
+
+<a href="15-sound-effects-and-music.zip">Download the media and source code for this demo here.</a><br/>
+<br/>
+
+
+
+
+
+
+
+
+<a href="../index.php.html#Sound Effects and Music">Back to Index</a>
+
+
+</div>
+                    
+                
+            </div>
+        </main>
+        
+<footer class="my-3 py-3">
+    
+<nav class="container">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880704953225255"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5880704953225255"
+         data-ad-slot="7546677284"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</nav>
+
+    <div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://discourse.libsdl.org/">SDL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/SDL/index.php">SDL2 Tutorials</a>
+    <a class="mx-2" href="../index.php.html">SDL3 Tutorials</a>
+    <a class="mx-2" href="https://lazyfoo.net/articles/index.php">Articles</a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/OpenGL/index.php">OpenGL Tutorials</a>
+    <a class="mx-2" href="https://www.opengl.org/discussion_boards/forum.php">OpenGL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.bsky.social">Follow BlueSky</a>
+    <a class="mx-2" href="https://www.facebook.com/lazyfooproductions/">Follow Facebook</a>
+    <a class="mx-2" href="https://twitter.com/lazyfoo_net">Follow Twitter</a>
+    <a class="mx-2" href="https://www.threads.net/@lazyfoo.productions">Follow Threads</a>
+</div>
+
+<div class="container justify-content-center text-center my-2 text-break">
+    <a class="mx-2" href="https://lazyfoo.net/donate.php" id="donationLink">Donate</a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.net/index.php">News</a>
+    <a class="mx-2" href="https://lazyfoo.net/faq.php">FAQs</a>
+    <a class="mx-2" href="https://lazyfoo.net/contact.php">Contact</a>
+    <a class="mx-2" href="https://lazyfoo.net/bugs.php">Bugs</a>
+</div>
+
+	<aside class="text-center">
+    Copyright Lazy Foo' Productions 2004-2026<br/>
+    <br/>
+    <button type="button" class="btn btn-light my-10" id="btnToggle">Light Mode</button>
+    </aside>
+
+    <script src="../../../assets/donors.js"></script>
+    <script src="../../../assets/light-dark-toggle.js"></script>
+
+</footer>
+
+    </body>
+</html>

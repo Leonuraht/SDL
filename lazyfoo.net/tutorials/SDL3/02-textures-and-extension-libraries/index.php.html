@@ -1,0 +1,693 @@
+<!-- Get tutorial set -->
+
+
+<!-- Tutorial root -->
+
+
+
+    <!-- Desktop tutorial set -->
+    
+        
+    
+
+                    
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+    <head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VP5RSQ168Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VP5RSQ168Y');
+</script>
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="Lazy Foo' Productions SDL 3 Load PNG C++ Tutorial 2D Windows Linux Mac">
+<meta name="description" content="Load PNGs and render textures.">
+
+<link href="../../../assets/style.css" rel="stylesheet">
+<script src="../../../assets/bootstrap-5.3.0-alpha1-dist/js/bootstrap.bundle.min.js"></script>
+
+<title>Lazy Foo' Productions - Textures and Extension Libraries</title>
+
+<script src="../../../assets/light-dark-loader.js"></script>
+
+
+    </head>
+    
+    <body>
+
+        
+<header>
+
+<h1 class="text-center">Lazy Foo' Productions</h1>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://discourse.libsdl.org/">SDL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/SDL/index.php">SDL2 Tutorials</a>
+    <a class="mx-2" href="../index.php.html">SDL3 Tutorials</a>
+    <a class="mx-2" href="https://lazyfoo.net/articles/index.php">Articles</a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/OpenGL/index.php">OpenGL Tutorials</a>
+    <a class="mx-2" href="https://www.opengl.org/discussion_boards/forum.php">OpenGL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.bsky.social">Follow BlueSky</a>
+    <a class="mx-2" href="https://www.facebook.com/lazyfooproductions/">Follow Facebook</a>
+    <a class="mx-2" href="https://twitter.com/lazyfoo_net">Follow Twitter</a>
+    <a class="mx-2" href="https://www.threads.net/@lazyfoo.productions">Follow Threads</a>
+</div>
+
+<div class="container justify-content-center text-center my-2 text-break">
+    <a class="mx-2" href="https://lazyfoo.net/donate.php" id="donationLink">Donate</a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.net/index.php">News</a>
+    <a class="mx-2" href="https://lazyfoo.net/faq.php">FAQs</a>
+    <a class="mx-2" href="https://lazyfoo.net/contact.php">Contact</a>
+    <a class="mx-2" href="https://lazyfoo.net/bugs.php">Bugs</a>
+</div>
+
+
+<nav class="container">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880704953225255"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5880704953225255"
+         data-ad-slot="7546677284"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</nav>
+
+<br/>
+
+<nav class="container">
+		<script async src="https://cse.google.com/cse.js?cx=f01a79f66150b448d">
+		</script>
+		<div class="gcse-search"></div>
+</nav>
+
+
+</header>
+
+
+        
+        <main>
+            <div class="container">
+                
+                    
+                        <div class="container border py-3 my-3">
+    <h1 class="text-center">Textures and Extension Libraries</h1>
+    
+        <div class="text-center"><img class="img-fluid" src="preview.png" alt="Textures and Extension Libraries screenshot"></div>
+    
+    <p class="text-center"><b>Last Updated: Jun 7th, 2025</b></p>
+    
+        In this tutorial we'll be rendering with textures instead of surfaces because textures are hardware accelerated and therefore faster to render. We'll also be loading PNG files using SDL_image.
+
+    
+    
+</div>
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">/* Headers */
+//Using SDL, SDL_image, and STL string
+#include &#060SDL3/SDL.h&#062
+#include &#060SDL3/SDL_main.h&#062
+#include &#060SDL3_image/SDL_image.h&#062
+#include &#060string&#062
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">For this tutorial we'll be using the SDL_image extension library. Make sure to reuse your SDL3 project (otherwise you'll have to set it up again for a new SDL3 project) and download and install SDL_image much like you did with SDL3.<br/>
+<br/>
+Also, from now on we will not be covering the entire source code, just highlighting the pieces relevant to the lesson.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">/* Class Prototypes */
+class LTexture
+{
+public:
+    //Initializes texture variables
+    LTexture();
+
+    //Cleans up texture variables
+    ~LTexture();
+
+    //Loads texture from disk
+    bool loadFromFile( std::string path );
+
+    //Cleans up texture
+    void destroy();
+
+    //Draws texture
+    void render( float x, float y );
+
+    //Gets texture attributes
+    int getWidth();
+    int getHeight();
+    bool isLoaded();
+
+private:
+    //Contains texture data
+    SDL_Texture* mTexture;
+
+    //Texture dimensions
+    int mWidth;
+    int mHeight;
+};
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Here is our lazy texture class which will be wrapping the <a href="https://wiki.libsdl.org/SDL3/SDL_Texture">SDL_Texture</a> class. We have our constructor and destructors, <code>loadFromFile</code> which will load the image and <code>destroy</code> which will free the texture when we're done with it.
+The <code>render</code> function will draw the image at the specified position. The <code>getWidth</code>/<code>getHeight</code> and <code>isLoaded</code> functions get the image attributes.<br/>
+<br/>
+In terms of data members <code>mTexture</code> (which starts with m because it's a member variables much like how global variables start with a g) hold the texture data and <code>mWidth</code> and <code>mWidth</code> holds the dimensions.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">/* Global Variables */
+//The window we'll be rendering to
+SDL_Window* gWindow{ nullptr };
+
+//The renderer used to draw to the window
+SDL_Renderer* gRenderer{ nullptr };
+
+//The PNG image we will render
+LTexture gPngTexture;
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">In terms of global variables we have the window like before but instead of a screen surface we have an <a href="https://wiki.libsdl.org/SDL3/SDL_Renderer">SDL_Renderer</a> that we'll used to draw to the screen. We also have our wrapped texture object with <code>LTexture</code>.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">/* Class Implementations */
+//LTexture Implementation
+LTexture::LTexture():
+    //Initialize texture variables
+    mTexture{ nullptr },
+    mWidth{ 0 },
+    mHeight{ 0 }
+{
+
+}
+
+LTexture::~LTexture()
+{
+    //Clean up texture
+    destroy();
+}
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Here is the constructor and destructor. The constructor initializes the variables (which you should always do because it can lead to some nasty release only bugs if you don't) and as you can see we set the values in the member initializer list as opposed to inside of the constructor itself. This is
+considered a good habit as it allows for better compiler optimization.<br/>
+<br/>
+The destructor just calls the function to clean up the texture after we're done with it.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">bool LTexture::loadFromFile( std::string path )
+{
+    //Clean up texture if it already exists
+    destroy();
+
+    //Load surface
+    if( SDL_Surface* loadedSurface = IMG_Load( path.c_str() ); loadedSurface == nullptr )
+    {
+        SDL_Log( "Unable to load image %s! SDL_image error: %s\n", path.c_str(), SDL_GetError() );
+    }
+    else
+    {
+        //Create texture from surface
+        if( mTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface ); mTexture == nullptr )
+        {
+            SDL_Log( "Unable to create texture from loaded pixels! SDL error: %s\n", SDL_GetError() );
+        }
+        else
+        {
+            //Get image dimensions
+            mWidth = loadedSurface->w;
+            mHeight = loadedSurface->h;
+        }
+
+        //Clean up loaded surface
+        SDL_DestroySurface( loadedSurface );
+    }
+
+    //Return success if texture loaded
+    return mTexture != nullptr;
+}
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Our texture loading function first cleans up the texture just in case it already has data loaded. It then tries to load the image with the SDL_image function <a href="https://wiki.libsdl.org/SDL3_image/IMG_Load">IMG_Load</a>. <code>IMG_Load</code> can load many types of image and in these tutorials we'll
+configure it to load PNG images. If the image loading fails, we print an error to the console.<br/>
+<br/>
+If the image loads successfully, we then try to create a texture from it using <a href="https://wiki.libsdl.org/SDL3/SDL_CreateTextureFromSurface">SDL_CreateTextureFromSurface</a> which takes in the renderer and the surface we want to create a texture from. If the texture creation fails, we print an
+error, otherwise we set the texture dimensions.<br/>
+<br/>
+Whether or not the texture creation fails, we want to destroy the surface after we're done with it. Lastly, we return whether or not the texture was loaded.<br/>
+<br/>
+If you're wondering why we aren't <a href="https://wiki.libsdl.org/SDL3_image/IMG_LoadTexture">IMG_LoadTexture</a> it's because while that is a faster way to load the image, in future tutorials we will be making alterations to the loaded surface before creating a texture from it. If you want to eliminate
+an extra step and you don't need to alter the loaded image before creating a texture from it, you can use <code>IMG_LoadTexture</code>.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">void LTexture::destroy()
+{
+    //Clean up texture
+    SDL_DestroyTexture( mTexture );
+    mTexture = nullptr;
+    mWidth = 0;
+    mHeight = 0;
+}
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">In our clean up function we call <a href="https://wiki.libsdl.org/SDL3/SDL_DestroyTexture">SDL_DestroyTexture</a> to release the texture after we're done with it and reinitialize the member variables.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">void LTexture::render( float x, float y )
+{
+    //Set texture position
+    SDL_FRect dstRect{ x, y, static_cast&#060float&#062( mWidth ), static_cast&#060float&#062( mHeight ) };
+
+    //Render texture
+    SDL_RenderTexture( gRenderer, mTexture, nullptr, &dstRect );
+}
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Here is the code we use to draw our texture. First we define the destination rectangle (of type <a href="https://wiki.libsdl.org/SDL3/SDL_FRect">SDL_FRect</a>) which defines where on the screen we're going to draw it. Because <code>SDL_FRect</code> is made of floating point types, we want to static cast
+the image dimensions (which are integers) to float types to get rid of any warnings and because you want to make sure to be explicit with your type conversions. It can lead to some nasty behavior if you aren't careful with how you convert your data types (like it can get you hacked by incorrectly setting
+your user ID to 0 nasty).<br/>
+<br/>
+Then we call <a href="https://wiki.libsdl.org/SDL3/SDL_RenderTexture">SDL_RenderTexture</a> to draw the texture. The first argument is the renderer we need to draw stuff. The second argument is the texture itself. The third argument we'll cover in a future tutorial so we'll set it to null for now. The last
+argument defines the destination rectangle of the texture, so it defines it's position and width/height.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">int LTexture::getWidth()
+{
+    return mWidth;
+}
+
+int LTexture::getHeight()
+{
+    return mHeight;
+}
+
+bool LTexture::isLoaded()
+{
+    return mTexture != nullptr;
+}
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">As you can see, these are simple accessor functions that give us the texture dimensions and whether the texture is loaded or not.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">/* Function Implementations */
+bool init()
+{
+    //Initialization flag
+    bool success{ true };
+
+    //Initialize SDL
+    if( SDL_Init( SDL_INIT_VIDEO ) == false )
+    {
+        SDL_Log( "SDL could not initialize! SDL error: %s\n", SDL_GetError() );
+        success = false;
+    }
+    else
+    {
+        //Create window with renderer
+        if( SDL_CreateWindowAndRenderer( "SDL3 Tutorial: Textures and Extension Libraries", kScreenWidth, kScreenHeight, 0, &gWindow, &gRenderer ) == false )
+        {
+            SDL_Log( "Window could not be created! SDL error: %s\n", SDL_GetError() );
+            success = false;
+        }
+    }
+
+    return success;
+}
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Our initialization function should look familiar with some key changes. Now the window is created with <a href="https://wiki.libsdl.org/SDL3/SDL_CreateWindowAndRenderer">SDL_CreateWindowAndRenderer</a> which as you would expect creates the window and the renderer we need to draw to the window.<br/>
+<br/>
+If you're wondering where the call to initialize SDL_image is at, that is one thing they got rid of in SDL3_image. This means you don't have to manually initialize it and I don't have to get a bunch of emails from people who need to work on their bitwise operations =)
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">bool loadMedia()
+{
+    //File loading flag
+    bool success{ true };
+
+    //Load splash image
+    if( gPngTexture.loadFromFile( "02-textures-and-extension-libraries/loaded.png" ) == false )
+    {
+        SDL_Log( "Unable to load png image!\n");
+        success = false;
+    }
+
+    return success;
+}
+
+void close()
+{
+    //Clean up texture
+    gPngTexture.destroy();
+    
+    //Destroy window
+    SDL_DestroyRenderer( gRenderer );
+    gRenderer = nullptr;
+    SDL_DestroyWindow( gWindow );
+    gWindow = nullptr;
+
+    //Quit SDL subsystems
+    SDL_Quit();
+}
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">As you would expect, our media loading function loads our image. The clean up function cleans up the loaded texture, cleans up the renderer with <a href="https://wiki.libsdl.org/SDL3/SDL_DestroyRenderer">SDL_DestroyRenderer</a> and cleans up the window like before.<br/>
+<br/>
+Much like we don't have to initialize SDL_image anymore, we also don't have to shut it down.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">int main( int argc, char* args[] )
+{
+    //Final exit code
+    int exitCode{ 0 };
+
+    //Initialize
+    if( init() == false )
+    {
+        SDL_Log( "Unable to initialize program!\n" );
+        exitCode = 1;
+    }
+    else
+    {
+        //Load media
+        if( loadMedia() == false )
+        {
+            SDL_Log( "Unable to load media!\n" );
+            exitCode = 2;
+        }
+        else
+        {
+            //The quit flag
+            bool quit{ false };
+
+            //The event data
+            SDL_Event e;
+            SDL_zero( e );
+            
+            //The main loop
+            while( quit == false )
+            {
+                //Get event data
+                while( SDL_PollEvent( &e ) == true )
+                {
+                    //If event is quit type
+                    if( e.type == SDL_EVENT_QUIT )
+                    {
+                        //End the main loop
+                        quit = true;
+                    }
+                }
+
+                //Fill the background white
+                SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+                SDL_RenderClear( gRenderer );
+            
+                //Render image on screen
+                gPngTexture.render( 0.f, 0.f );
+
+                //Update screen
+                SDL_RenderPresent( gRenderer );
+            } 
+        }
+    }
+
+    //Clean up
+    close();
+
+    return exitCode;
+}
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Our <code>main</code> function works much like it did before. This time we call <a href="https://wiki.libsdl.org/SDL3/SDL_SetRenderDrawColor">SDL_SetRenderDrawColor</a> to set the color to clear the screen with and <a href="https://wiki.libsdl.org/SDL3/SDL_RenderClear">SDL_RenderClear</a> to clear the
+screen. Then we draw the PNG image and update the screen with <a href="https://wiki.libsdl.org/SDL3/SDL_RenderPresent">SDL_RenderPresent</a>.<br/>
+<br/>
+If you're wondering why we're using 0.f as opposed to just 0 or 0.0 for the position of the image, it's because when we write it as 0.f the compiler knows that this is explicitly a floating point number. 0 can be treated like an interger and 0.0 will be treated as a double. By explicitly defining it as
+a float, you avoid any of the potential problems that come with converting a integer to a float or a double to a float.
+</div>
+
+
+
+                    
+                
+                    
+                        <div class="container border py-3 mt-3 mb-5">
+
+<a href="02-textures-and-extension-libraries.zip">Download the media and source code for this demo here.</a><br/>
+<br/>
+
+
+
+
+
+
+
+
+<a href="../index.php.html#Textures and Extension Libraries">Back to Index</a>
+
+
+</div>
+                    
+                
+                    
+                        <div class="container border border-secondary rounded py-3 mb-3">
+<p>Addendum: <i>Deleting auto generated class functions</i></p>
+<div class="">
+When you create a class, C++ will auto generate:
+<ul>
+<li>The default constructor</li>
+<li>The copy constructor</li>
+<li>The copy assignment operator</li>
+<li>The move constructor (in modern C++)</li>
+<li>The move assignment operator (in modern C++)</li>
+</ul>
+It is considered good (modern) C++ coding to delete default class functions you're not going to use:
+<code><pre>
+class LTexture
+{
+public:
+    //Initializes texture variables
+    LTexture();
+
+    //Cleans up texture variables
+    ~LTexture();
+
+    //Remove copy constructor
+    LTexture( const LTexture& ) = delete;
+
+    //Remove copy assignment
+    LTexture& operator=( const LTexture& ) = delete;
+
+    //Remove move constructor
+    LTexture( LTexture&& ) = delete;
+
+    //Remove move assignment
+    LTexture& operator=( LTexture&& ) = delete;
+    
+    //Loads texture from disk
+    bool loadFromFile( std::string path );
+
+    //Cleans up texture
+    void destroy();
+
+    //Draws texture
+    void render( float x, float y );
+
+    //Gets texture attributes
+    int getWidth();
+    int getHeight();
+    bool isLoaded();
+
+private:
+    //Contains texture data
+    SDL_Texture* mTexture;
+
+    //Texture dimensions
+    int mWidth;
+    int mHeight;
+};
+</pre></code>
+A big thing about writing good C++ code is not only making code that works well, but making code that is hard to use badly. For example in this tutorial the default copy constructor does a shallow copy if we were to copy the LTexture which is not going to lead to desirable behavior.<br/>
+<br/>
+However, since we are not copying LTextures in this demo and the deletion does clutter up the code, I decided to skip doing it for the sake of making the code easier to read. However, in a real application you should watch out for behavior that auto generated functions cause.
+
+</div>
+</div>
+                    
+                
+                    
+                        <div class="container border border-secondary rounded py-3 mb-3">
+<p>Addendum: <i>Inline functions</i></p>
+<div class="">
+Inline functions are a way to optimize your code when used properly. When used improperly, they can also make your code slower.<br/>
+<br/>
+Certain functions like <code>getWidth</code> and <code>getHeight</code> are prime candidates for optimization through inlining. However, the line between what should be inlined and what shouldn't be inlined is blurry and rather than having to test each function to see if they would benefit from inlining,
+I just won't bother. You shouldn't worry about inlining until you finish your computer architecture course.
+
+</div>
+</div>
+                    
+                
+            </div>
+        </main>
+        
+<footer class="my-3 py-3">
+    
+<nav class="container">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880704953225255"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5880704953225255"
+         data-ad-slot="7546677284"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</nav>
+
+    <div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://discourse.libsdl.org/">SDL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/SDL/index.php">SDL2 Tutorials</a>
+    <a class="mx-2" href="../index.php.html">SDL3 Tutorials</a>
+    <a class="mx-2" href="https://lazyfoo.net/articles/index.php">Articles</a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/OpenGL/index.php">OpenGL Tutorials</a>
+    <a class="mx-2" href="https://www.opengl.org/discussion_boards/forum.php">OpenGL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.bsky.social">Follow BlueSky</a>
+    <a class="mx-2" href="https://www.facebook.com/lazyfooproductions/">Follow Facebook</a>
+    <a class="mx-2" href="https://twitter.com/lazyfoo_net">Follow Twitter</a>
+    <a class="mx-2" href="https://www.threads.net/@lazyfoo.productions">Follow Threads</a>
+</div>
+
+<div class="container justify-content-center text-center my-2 text-break">
+    <a class="mx-2" href="https://lazyfoo.net/donate.php" id="donationLink">Donate</a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.net/index.php">News</a>
+    <a class="mx-2" href="https://lazyfoo.net/faq.php">FAQs</a>
+    <a class="mx-2" href="https://lazyfoo.net/contact.php">Contact</a>
+    <a class="mx-2" href="https://lazyfoo.net/bugs.php">Bugs</a>
+</div>
+
+	<aside class="text-center">
+    Copyright Lazy Foo' Productions 2004-2026<br/>
+    <br/>
+    <button type="button" class="btn btn-light my-10" id="btnToggle">Light Mode</button>
+    </aside>
+
+    <script src="../../../assets/donors.js"></script>
+    <script src="../../../assets/light-dark-toggle.js"></script>
+
+</footer>
+
+    </body>
+</html>

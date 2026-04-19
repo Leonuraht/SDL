@@ -1,0 +1,470 @@
+<!-- Get tutorial set -->
+
+
+<!-- Tutorial root -->
+
+
+
+    
+    
+
+                    
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+    <head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VP5RSQ168Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VP5RSQ168Y');
+</script>
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="Lazy Foo' Productions C++ SDL 3 Tutorial 2D Windows Linux Mac Game Programming Tutorials">
+<meta name="description" content="A beginners guide for lower level game programming.">
+
+<link href="../../assets/style.css" rel="stylesheet">
+<script src="../../assets/bootstrap-5.3.0-alpha1-dist/js/bootstrap.bundle.min.js"></script>
+
+<title>Lazy Foo' Productions - Beginning Game Programming v3.0</title>
+
+<script src="../../assets/light-dark-loader.js"></script>
+
+
+    </head>
+    
+    <body>
+
+        
+<header>
+
+<h1 class="text-center">Lazy Foo' Productions</h1>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://discourse.libsdl.org/">SDL Forums <img alt="external link" src="../../assets/external-link.svg"></a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/SDL/index.php">SDL2 Tutorials</a>
+    <a class="mx-2" href="index.php.html">SDL3 Tutorials</a>
+    <a class="mx-2" href="https://lazyfoo.net/articles/index.php">Articles</a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/OpenGL/index.php">OpenGL Tutorials</a>
+    <a class="mx-2" href="https://www.opengl.org/discussion_boards/forum.php">OpenGL Forums <img alt="external link" src="../../assets/external-link.svg"></a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.bsky.social">Follow BlueSky</a>
+    <a class="mx-2" href="https://www.facebook.com/lazyfooproductions/">Follow Facebook</a>
+    <a class="mx-2" href="https://twitter.com/lazyfoo_net">Follow Twitter</a>
+    <a class="mx-2" href="https://www.threads.net/@lazyfoo.productions">Follow Threads</a>
+</div>
+
+<div class="container justify-content-center text-center my-2 text-break">
+    <a class="mx-2" href="https://lazyfoo.net/donate.php" id="donationLink">Donate</a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.net/index.php">News</a>
+    <a class="mx-2" href="https://lazyfoo.net/faq.php">FAQs</a>
+    <a class="mx-2" href="https://lazyfoo.net/contact.php">Contact</a>
+    <a class="mx-2" href="https://lazyfoo.net/bugs.php">Bugs</a>
+</div>
+
+
+<nav class="container">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880704953225255"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5880704953225255"
+         data-ad-slot="7546677284"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</nav>
+
+<br/>
+
+<nav class="container">
+		<script async src="https://cse.google.com/cse.js?cx=f01a79f66150b448d">
+		</script>
+		<div class="gcse-search"></div>
+</nav>
+
+
+</header>
+
+
+        
+        <main>
+            <div class="container">
+                
+                    
+                        <div class="container border py-3 my-3">
+    <h1 class="text-center">Beginning Game Programming v3.0</h1>
+    
+    <p class="text-center"><b>Last Updated: Mar 30th, 2026</b></p>
+    
+        Welcome to the worst kept secret in SDL development. Remember to check your sitemap generation code before deploying, kids.<br/>
+<br/>
+These tutorials were designed for beginner C++ programmers (with some stuff thrown in for the more experienced) who want to move from text based
+applications to real time games with graphics. By the end of these tutorials, you'll know the basics so you can really start digging into lower
+level game programming.<br/>
+<br/>
+This tutorial set is still under construction. If you want more SDL3 code to play around with, check out the SDL3 ports at the bottom of each page
+of the SDL2 tutorials provided by the creator of SDL Sam Lantinga.<br/>
+<br/>
+<b>Update for the new year:</b> Guess who has an SDL tutorial website and is currently funemployed? This guy.<br/>
+<br/>
+Currently, I am not in any immediate financial danger (but oh boy does unemployment not go far enough), but this means two things:
+<ol>
+<li>I have to focus on getting a job and which means I am going to put this site on the back burner. I am planning put a coat a polish on the
+tutorials and post set up tutorials, maybe post an article or two, but after that I will have to halt tutorial development until I find a new
+job.</li>
+<li><a href="https://lazyfoo.net/donate.php">Any and all donations are appreciated.</a></li>
+</ol>
+In terms of what I have left before officially publishing these tutorials:
+<ol>
+<li>I have to test them on all the platforms I'm supporting (Windows x64, Linux x64, MacOS x64/Arm, iOS, and Android). They have been tested
+Windows x64 but I still have to create proper unit tests for the other platforms.</li>
+<li>Hopefully I have a job by this point but if not further tutorials will have to wait until after I get my next job. Any of you who have had to
+find developer work know that looking for a job is a job.</li>
+</ol>
+Wish me luck on the job hunt because it is rough out there. I have seen former coworkers have to do Door Dash to make ends meet despite having over
+15 years of experience.<br/>
+
+    
+    
+</div>
+                    
+                
+                    
+                        <table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th colspan="2" class="text-center">Table of Contents</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="00-introduction/index.php.html" name="Introduction">Introduction</a><br>
+                </td>
+                <td class="text-start">
+                    A little intro before we start coding.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="01-hello-sdl3/index.php.html" name="Hello SDL3">Hello SDL3</a><br>
+                </td>
+                <td class="text-start">
+                    Get started making games with your first SDL3 App.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="02-textures-and-extension-libraries/index.php.html" name="Textures and Extension Libraries">Textures and Extension Libraries</a><br>
+                </td>
+                <td class="text-start">
+                    Load PNGs and render textures.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="03-key-presses-and-key-states/index.php.html" name="Key Presses and Key States">Key Presses and Key States</a><br>
+                </td>
+                <td class="text-start">
+                    Learn how to handle keyboard input.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="04-color-keying/index.php.html" name="Color Keying">Color Keying</a><br>
+                </td>
+                <td class="text-start">
+                    Give your textures transparent backgrounds.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="05-sprite-clipping-and-stretching/index.php.html" name="Sprite Clipping and Stretching">Sprite Clipping and Stretching</a><br>
+                </td>
+                <td class="text-start">
+                    Clip sprites from a sprite sheet and resize them.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="06-rotation-and-flipping/index.php.html" name="Rotation and Flipping">Rotation and Flipping</a><br>
+                </td>
+                <td class="text-start">
+                    Learn to rotate and flip your images.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="07-color-modulation-and-alpha-blending/index.php.html" name="Color Modulation and Alpha Blending">Color Modulation and Alpha Blending</a><br>
+                </td>
+                <td class="text-start">
+                    Modify your texture colors and make your images transparent with alpha blending.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="08-true-type-fonts/index.php.html" name="True Type Fonts">True Type Fonts</a><br>
+                </td>
+                <td class="text-start">
+                    Render True Type fonts with SDL_ttf.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="09-mouse-events/index.php.html" name="Mouse Events">Mouse Events</a><br>
+                </td>
+                <td class="text-start">
+                    Learn how to handle mouse input.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="10-timing/index.php.html" name="Timing">Timing</a><br>
+                </td>
+                <td class="text-start">
+                    Learn the basics of application time.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="11-advanced-timers/index.php.html" name="Advanced Timers">Advanced Timers</a><br>
+                </td>
+                <td class="text-start">
+                    Make a timer that can start/stop/pause/unpause.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="12-frame-rate-and-vsync/index.php.html" name="Frame Rate and VSync">Frame Rate and VSync</a><br>
+                </td>
+                <td class="text-start">
+                    Learn how to manage frame rate.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="13-motion/index.php.html" name="Motion">Motion</a><br>
+                </td>
+                <td class="text-start">
+                    Learn how to manage frame rate.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="14-animation/index.php.html" name="Animation">Animation</a><br>
+                </td>
+                <td class="text-start">
+                    Learn to animate a sprite.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="15-sound-effects-and-music/index.php.html" name="Sound Effects and Music">Sound Effects and Music</a><br>
+                </td>
+                <td class="text-start">
+                    Play music and sound effects with SDL_mixer.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="16-collision-detection/index.php.html" name="Collision Detection">Collision Detection</a><br>
+                </td>
+                <td class="text-start">
+                    Learn how to check collision between collision boxes.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="17-text-input-and-clipboard-handling/index.php.html" name="Text Input and Clipboard Handling">Text Input and Clipboard Handling</a><br>
+                </td>
+                <td class="text-start">
+                    Input strings and handle copying and pasting.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="18-scrolling/index.php.html" name="Scrolling">Scrolling</a><br>
+                </td>
+                <td class="text-start">
+                    Draw levels larger than the screen with a scrolling camera.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="19-state-machines/index.php.html" name="State Machines">State Machines</a><br>
+                </td>
+                <td class="text-start">
+                    Manage your game states with state machines.
+                </td>
+            </tr>
+            
+        
+            
+            <tr>
+                <td class="text-end">
+                    <a href="20-multiple-source-files/index.php.html" name="Multiple Source Files">Multiple Source Files</a><br>
+                </td>
+                <td class="text-start">
+                    Split up your single source C++ applications.
+                </td>
+            </tr>
+            
+        
+            
+        
+    </tbody>
+ </table>
+                    
+                
+                    
+                        <div class="container border py-3 mt-3 mb-5">
+
+
+
+
+
+If you find any bugs or typos in the tutorials please <a href="https://lazyfoo.net/contact.php">contact me</a>.
+<br/>
+<br/>
+
+
+
+
+</div>
+                    
+                
+            </div>
+        </main>
+        
+<footer class="my-3 py-3">
+    
+<nav class="container">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880704953225255"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5880704953225255"
+         data-ad-slot="7546677284"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</nav>
+
+    <div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://discourse.libsdl.org/">SDL Forums <img alt="external link" src="../../assets/external-link.svg"></a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/SDL/index.php">SDL2 Tutorials</a>
+    <a class="mx-2" href="index.php.html">SDL3 Tutorials</a>
+    <a class="mx-2" href="https://lazyfoo.net/articles/index.php">Articles</a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/OpenGL/index.php">OpenGL Tutorials</a>
+    <a class="mx-2" href="https://www.opengl.org/discussion_boards/forum.php">OpenGL Forums <img alt="external link" src="../../assets/external-link.svg"></a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.bsky.social">Follow BlueSky</a>
+    <a class="mx-2" href="https://www.facebook.com/lazyfooproductions/">Follow Facebook</a>
+    <a class="mx-2" href="https://twitter.com/lazyfoo_net">Follow Twitter</a>
+    <a class="mx-2" href="https://www.threads.net/@lazyfoo.productions">Follow Threads</a>
+</div>
+
+<div class="container justify-content-center text-center my-2 text-break">
+    <a class="mx-2" href="https://lazyfoo.net/donate.php" id="donationLink">Donate</a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.net/index.php">News</a>
+    <a class="mx-2" href="https://lazyfoo.net/faq.php">FAQs</a>
+    <a class="mx-2" href="https://lazyfoo.net/contact.php">Contact</a>
+    <a class="mx-2" href="https://lazyfoo.net/bugs.php">Bugs</a>
+</div>
+
+	<aside class="text-center">
+    Copyright Lazy Foo' Productions 2004-2026<br/>
+    <br/>
+    <button type="button" class="btn btn-light my-10" id="btnToggle">Light Mode</button>
+    </aside>
+
+    <script src="../../assets/donors.js"></script>
+    <script src="../../assets/light-dark-toggle.js"></script>
+
+</footer>
+
+    </body>
+</html>

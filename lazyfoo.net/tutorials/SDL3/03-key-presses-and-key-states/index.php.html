@@ -1,0 +1,442 @@
+<!-- Get tutorial set -->
+
+
+<!-- Tutorial root -->
+
+
+
+    <!-- Desktop tutorial set -->
+    
+        
+    
+
+                    
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+    <head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VP5RSQ168Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VP5RSQ168Y');
+</script>
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="Lazy Foo' Productions SDL 3 keyboard events key states C++ Tutorial 2D Windows Linux Mac">
+<meta name="description" content="Learn how to handle keyboard input.">
+
+<link href="../../../assets/style.css" rel="stylesheet">
+<script src="../../../assets/bootstrap-5.3.0-alpha1-dist/js/bootstrap.bundle.min.js"></script>
+
+<title>Lazy Foo' Productions - Key Presses and Key States</title>
+
+<script src="../../../assets/light-dark-loader.js"></script>
+
+
+    </head>
+    
+    <body>
+
+        
+<header>
+
+<h1 class="text-center">Lazy Foo' Productions</h1>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://discourse.libsdl.org/">SDL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/SDL/index.php">SDL2 Tutorials</a>
+    <a class="mx-2" href="../index.php.html">SDL3 Tutorials</a>
+    <a class="mx-2" href="https://lazyfoo.net/articles/index.php">Articles</a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/OpenGL/index.php">OpenGL Tutorials</a>
+    <a class="mx-2" href="https://www.opengl.org/discussion_boards/forum.php">OpenGL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.bsky.social">Follow BlueSky</a>
+    <a class="mx-2" href="https://www.facebook.com/lazyfooproductions/">Follow Facebook</a>
+    <a class="mx-2" href="https://twitter.com/lazyfoo_net">Follow Twitter</a>
+    <a class="mx-2" href="https://www.threads.net/@lazyfoo.productions">Follow Threads</a>
+</div>
+
+<div class="container justify-content-center text-center my-2 text-break">
+    <a class="mx-2" href="https://lazyfoo.net/donate.php" id="donationLink">Donate</a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.net/index.php">News</a>
+    <a class="mx-2" href="https://lazyfoo.net/faq.php">FAQs</a>
+    <a class="mx-2" href="https://lazyfoo.net/contact.php">Contact</a>
+    <a class="mx-2" href="https://lazyfoo.net/bugs.php">Bugs</a>
+</div>
+
+
+<nav class="container">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880704953225255"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5880704953225255"
+         data-ad-slot="7546677284"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</nav>
+
+<br/>
+
+<nav class="container">
+		<script async src="https://cse.google.com/cse.js?cx=f01a79f66150b448d">
+		</script>
+		<div class="gcse-search"></div>
+</nav>
+
+
+</header>
+
+
+        
+        <main>
+            <div class="container">
+                
+                    
+                        <div class="container border py-3 my-3">
+    <h1 class="text-center">Key Presses and Key States</h1>
+    
+        <div class="text-center"><img class="img-fluid" src="preview.png" alt="Key Presses and Key States screenshot"></div>
+    
+    <p class="text-center"><b>Last Updated: Jul 13th, 2025</b></p>
+    
+        In this tutorial we'll be handling keyboard input.
+
+    
+    
+</div>
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">/* Global Variables */
+//The window we'll be rendering to
+SDL_Window* gWindow{ nullptr };
+
+//The renderer used to draw to the window
+SDL_Renderer* gRenderer{ nullptr };
+
+//The directional images
+LTexture gUpTexture, gDownTexture, gLeftTexture, gRightTexture;
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Here are the directional textures we're going to render based on the user's input.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">bool loadMedia()
+{
+    //File loading flag
+    bool success{ true };
+
+    //Load directional images
+    if( gUpTexture.loadFromFile( "03-key-presses-and-key-states/up.png" ) == false )
+    {
+        SDL_Log( "Unable to load up image!\n");
+        success = false;
+    }
+    if( gDownTexture.loadFromFile( "03-key-presses-and-key-states/down.png" ) == false )
+    {
+        SDL_Log( "Unable to load down image!\n");
+        success = false;
+    }
+    if( gLeftTexture.loadFromFile( "03-key-presses-and-key-states/left.png" ) == false )
+    {
+        SDL_Log( "Unable to load left image!\n");
+        success = false;
+    }
+    if( gRightTexture.loadFromFile( "03-key-presses-and-key-states/right.png" ) == false )
+    {
+        SDL_Log( "Unable to load right image!\n");
+        success = false;
+    }
+
+    return success;
+}
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Here we are loading the textures.<br/>
+<br/>
+If you're wondering why we continue to try to load images even if one of them fails, it's because we want to get all potential failures at once which makes things easier to debug as opposed to fixing one error, then getting another bug, and then fixing another, etc.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">            //The quit flag
+            bool quit{ false };
+
+            //The event data
+            SDL_Event e;
+            SDL_zero( e );
+            
+            //The currently rendered texture
+            LTexture* currentTexture = &gUpTexture;
+
+            //Background color defaults to white
+            SDL_Color bgColor{ 0xFF, 0xFF, 0xFF, 0xFF };
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Before we enter the main loop, we want to default the texture to the up texture and the background color to white.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">                //Get event data
+                while( SDL_PollEvent( &e ) == true )
+                {
+                    //If event is quit type
+                    if( e.type == SDL_EVENT_QUIT )
+                    {
+                        //End the main loop
+                        quit = true;
+                    }
+                    //On keyboard key press
+                    else if( e.type == SDL_EVENT_KEY_DOWN )
+                    {
+                        //Set texture
+                        if( e.key.key == SDLK_UP )
+                        {
+                            currentTexture = &gUpTexture;
+                        }
+                        else if( e.key.key == SDLK_DOWN )
+                        {
+                            currentTexture = &gDownTexture;
+                        }
+                        else if( e.key.key == SDLK_LEFT )
+                        {
+                            currentTexture = &gLeftTexture;
+                        }
+                        else if( e.key.key == SDLK_RIGHT )
+                        {
+                            currentTexture = &gRightTexture;
+                        }
+                    }
+                }
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">When a keyboard key is pressed, we get an <a href="https://wiki.libsdl.org/SDL3/SDL_EventType">SDL_EventType</a> of <code>SDL_EVENT_KEY_DOWN</code> and an event type of <a href="https://wiki.libsdl.org/SDL3/SDL_KeyboardEvent">SDL_KeyboardEvent</a> happens. The <code>key</code> member gives us the
+<a href="https://wiki.libsdl.org/SDL3/SDL_Keycode">SDL_Keycode</a> of the key press which is the virtual key which is based on the keyboard layout as opposed to the physical key.<br/>
+<br/>
+Here we set the texture we want to eventually render.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">                //Reset background color to white
+                bgColor.r = 0xFF;
+                bgColor.g = 0xFF;
+                bgColor.b = 0xFF;
+
+                //Set background color based on key state
+                const bool* keyStates = SDL_GetKeyboardState( nullptr );
+                if( keyStates[ SDL_SCANCODE_UP ] == true )
+                {
+                    //Red
+                    bgColor.r = 0xFF;
+                    bgColor.g = 0x00;
+                    bgColor.b = 0x00;
+                }
+                else if( keyStates[ SDL_SCANCODE_DOWN ] == true )
+                {
+                    //Green
+                    bgColor.r = 0x00;
+                    bgColor.g = 0xFF;
+                    bgColor.b = 0x00;
+                }
+                else if( keyStates[ SDL_SCANCODE_LEFT ] == true )
+                {
+                    //Yellow
+                    bgColor.r = 0xFF;
+                    bgColor.g = 0xFF;
+                    bgColor.b = 0x00;
+                }
+                else if( keyStates[ SDL_SCANCODE_RIGHT ] == true )
+                {
+                    //Blue
+                    bgColor.r = 0x00;
+                    bgColor.g = 0x00;
+                    bgColor.b = 0xFF;
+                }
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Before we start rendering we want to set the background color. Where the texture is based on the most recent key press event, the background color is based on the current state of the keyboard.<br/>
+<br/>
+First we reset the background color to white so the background will be white unless the user is pressing a directional key. Then we get the current state of the keyboard keys with <a href="https://wiki.libsdl.org/SDL3/SDL_GetKeyboardState">SDL_GetKeyboardState</a>. We can then get the state of the keys using
+the <a href="https://wiki.libsdl.org/SDL3/SDL_Scancode">SDL_Scancode</a> which is based off the physical keyboard key  independent of language and keyboard mapping.
+</div>
+
+
+
+                    
+                
+                    
+                        
+
+<pre class="border my-0 py-3">                //Fill the background 
+                SDL_SetRenderDrawColor( gRenderer, bgColor.r, bgColor.g, bgColor.b, 0xFF );
+                SDL_RenderClear( gRenderer );
+            
+                //Render image on screen
+                currentTexture->render( ( kScreenWidth - currentTexture->getWidth() ) / 2.f, ( kScreenHeight - currentTexture->getHeight() ) / 2.f );
+
+                //Update screen
+                SDL_RenderPresent( gRenderer );
+</pre>
+
+
+    <div class="container border-start border-end border-bottom py-3 mb-3">Finally we render the background color the and key press texture.<br/>
+<br/>
+If you're wondering what those calculations are in the image coordinates, it's how you center an image. Say for example you had:
+<ul>
+<li>screen width of 1000</li>
+<li>image width of 200</li>
+</ul>
+This mean you need 400 pixels on the left and 400 pixels on the right for the image to be centered. When the x position of the image is on the left side, you want the image's x position to be 400. To calculate that based off the image width and screen width:<br/>
+<code>( 1000 - 200 ) / 2 = 400</code><br/>
+<br/>
+Or expressed in variables:<br/>
+<code>( screenWidth - imageWidth ) / 2</code>
+</div>
+
+
+
+                    
+                
+                    
+                        <div class="container border py-3 mt-3 mb-5">
+
+<a href="03-key-presses-and-key-states.zip">Download the media and source code for this demo here.</a><br/>
+<br/>
+
+
+
+
+
+
+
+
+<a href="../index.php.html#Key Presses and Key States">Back to Index</a>
+
+
+</div>
+                    
+                
+                    
+                        <div class="container border border-secondary rounded py-3 mb-3">
+<p>Addendum: <i>Division vs multiplication performance</i></p>
+<div class="">
+One thing you learn in computer architecture is that floating point division is significantly slower than floating point multiplication. So an easy way to optimize this code:<br/>
+<code>currentTexture->render( ( kScreenWidth - currentTexture->getWidth() ) / 2.f, ( kScreenHeight - currentTexture->getHeight() ) / 2.f );</code><br/>
+<br/>
+Is to replace the divison by multiplying by the inverse:<br/>
+<code>currentTexture->render( ( kScreenWidth - currentTexture->getWidth() ) * 0.5f, ( kScreenHeight - currentTexture->getHeight() ) * 0.5f );</code><br/>
+<br/>
+But in my opinion the division code is easier to read so I chose ease of reading over performance. Besides, when optimizing with inverses, we care about optimizing things like physics simulations of tens or hundreds of thousands of rigid bodies, not a handful of images.
+
+</div>
+</div>
+                    
+                
+            </div>
+        </main>
+        
+<footer class="my-3 py-3">
+    
+<nav class="container">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5880704953225255"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5880704953225255"
+         data-ad-slot="7546677284"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</nav>
+
+    <div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://discourse.libsdl.org/">SDL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/SDL/index.php">SDL2 Tutorials</a>
+    <a class="mx-2" href="../index.php.html">SDL3 Tutorials</a>
+    <a class="mx-2" href="https://lazyfoo.net/articles/index.php">Articles</a>
+    <a class="mx-2" href="https://lazyfoo.net/tutorials/OpenGL/index.php">OpenGL Tutorials</a>
+    <a class="mx-2" href="https://www.opengl.org/discussion_boards/forum.php">OpenGL Forums <img alt="external link" src="../../../assets/external-link.svg"></a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.bsky.social">Follow BlueSky</a>
+    <a class="mx-2" href="https://www.facebook.com/lazyfooproductions/">Follow Facebook</a>
+    <a class="mx-2" href="https://twitter.com/lazyfoo_net">Follow Twitter</a>
+    <a class="mx-2" href="https://www.threads.net/@lazyfoo.productions">Follow Threads</a>
+</div>
+
+<div class="container justify-content-center text-center my-2 text-break">
+    <a class="mx-2" href="https://lazyfoo.net/donate.php" id="donationLink">Donate</a>
+</div>
+
+<div class="container justify-content-center text-center my-2">
+    <a class="mx-2" href="https://lazyfoo.net/index.php">News</a>
+    <a class="mx-2" href="https://lazyfoo.net/faq.php">FAQs</a>
+    <a class="mx-2" href="https://lazyfoo.net/contact.php">Contact</a>
+    <a class="mx-2" href="https://lazyfoo.net/bugs.php">Bugs</a>
+</div>
+
+	<aside class="text-center">
+    Copyright Lazy Foo' Productions 2004-2026<br/>
+    <br/>
+    <button type="button" class="btn btn-light my-10" id="btnToggle">Light Mode</button>
+    </aside>
+
+    <script src="../../../assets/donors.js"></script>
+    <script src="../../../assets/light-dark-toggle.js"></script>
+
+</footer>
+
+    </body>
+</html>
