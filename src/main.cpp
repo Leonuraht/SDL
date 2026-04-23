@@ -10,6 +10,6 @@ int main() {
       SDL_CreateWindow("Ray Tracer", width, height, SDL_WINDOW_RESIZABLE);
   if (window == NULL)
     std::cout << "\nWINDOW CREATION FAILED\n" << std::endl;
-  SDL_Surface *surf = SDL_LoadSurface("~/Downloads/immg.png");
+
   return 0;
 }
