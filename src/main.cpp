@@ -1,12 +1,13 @@
 #include "init.hpp"
-#include <SDL3/SDL_events.h>
-#include <cstdlib>
 #include "texture.hpp"
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_render.h>
+#include <cstdlib>
 
 int main() {
     init();
-    Texture texture("/home/leonuraht/Downloads/vim1.png");
-    loadmedia();
+    std::string paths = "/home/leonuraht/Downloads/vim1.png";
+    Texture texture(paths);
     SDL_Event e;
     bool quit = false;
     while (!quit) {
@@ -14,10 +15,11 @@ int main() {
             if (e.type == SDL_EVENT_QUIT)
                 quit = true;
         }
-        SDL_FillSurfaceRect(screen, nullptr,
-                            SDL_MapSurfaceRGB(screen, 0x35, 0x78, 0xa2));
-        SDL_BlitSurface(surf, nullptr, screen, nullptr);
-        SDL_UpdateWindowSurface(window);
+        SDL_SetRenderDrawColor(renderer, 0x34, 0x56, 0xA2, 0xFF);
+        SDL_RenderClear(renderer);
+    
+        texture.render(0.f,0.f);
+        SDL_RenderPresent(renderer);
     }
     exit();
     return 0;
