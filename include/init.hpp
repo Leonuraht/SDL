@@ -6,11 +6,10 @@
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL_video.h>
 
-extern SDL_Window* window;
-extern SDL_Surface* surf; 
-extern SDL_Surface* screen;
+extern SDL_Window *window;
+extern SDL_Surface *surf;
+extern SDL_Surface *screen;
 extern int width, height;
-
 
 void init();
 void loadmedia();
