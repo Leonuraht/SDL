@@ -1,15 +1,20 @@
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_video.h>
-#include <iostream>
-
-int width = 800, height = 600;
+#include "init.hpp"
+#include <SDL3/SDL_events.h>
+#include <cstdlib>
 
 int main() {
-  SDL_Init(SDL_INIT_VIDEO);
-  SDL_Window *window =
-      SDL_CreateWindow("Ray Tracer", width, height, SDL_WINDOW_RESIZABLE);
-  if (window == NULL)
-    std::cout << "\nWINDOW CREATION FAILED\n" << std::endl;
-
+  init();
+  loadmedia();
+  SDL_Event e;
+  bool quit = false;
+  while(!quit){
+      while(SDL_PollEvent(&e) == true){
+          if(e.type == SDL_EVENT_QUIT) quit = true;
+      }
+      SDL_FillSurfaceRect(screen,nullptr,SDL_MapSurfaceRGB(screen,0x35,0x78,0xa2));
+      SDL_BlitSurface(surf,nullptr,screen,nullptr);
+      SDL_UpdateWindowSurface(window);
+  }
+  exit();
   return 0;
 }

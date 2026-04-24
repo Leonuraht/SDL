@@ -1,8 +1,14 @@
 [
 {
   "directory": "/home/leonuraht/storage/CFiles/SDL/build",
-  "command": "/usr/sbin/c++  -I/home/leonuraht/storage/CFiles/SDL/include -g -std=c++23 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/SDL_GPU_App.dir/src/main.cpp.o -c /home/leonuraht/storage/CFiles/SDL/src/main.cpp",
+  "command": "/usr/sbin/c++  -I/home/leonuraht/storage/CFiles/SDL/include -g -std=c++23 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/app.dir/src/init.cpp.o -c /home/leonuraht/storage/CFiles/SDL/src/init.cpp",
+  "file": "/home/leonuraht/storage/CFiles/SDL/src/init.cpp",
+  "output": "CMakeFiles/app.dir/src/init.cpp.o"
+},
+{
+  "directory": "/home/leonuraht/storage/CFiles/SDL/build",
+  "command": "/usr/sbin/c++  -I/home/leonuraht/storage/CFiles/SDL/include -g -std=c++23 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/app.dir/src/main.cpp.o -c /home/leonuraht/storage/CFiles/SDL/src/main.cpp",
   "file": "/home/leonuraht/storage/CFiles/SDL/src/main.cpp",
-  "output": "CMakeFiles/SDL_GPU_App.dir/src/main.cpp.o"
+  "output": "CMakeFiles/app.dir/src/main.cpp.o"
 }
 ]

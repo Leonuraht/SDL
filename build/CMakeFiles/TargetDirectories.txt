@@ -1,3 +1,3 @@
-/home/leonuraht/storage/CFiles/SDL/build/CMakeFiles/SDL_GPU_App.dir
+/home/leonuraht/storage/CFiles/SDL/build/CMakeFiles/app.dir
 /home/leonuraht/storage/CFiles/SDL/build/CMakeFiles/edit_cache.dir
 /home/leonuraht/storage/CFiles/SDL/build/CMakeFiles/rebuild_cache.dir

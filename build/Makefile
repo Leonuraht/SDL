@@ -117,24 +117,48 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named SDL_GPU_App
+# Target rules for targets named app
 
 # Build rule for target.
-SDL_GPU_App: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 SDL_GPU_App
-.PHONY : SDL_GPU_App
+app: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 app
+.PHONY : app
 
 # fast build rule for target.
-SDL_GPU_App/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SDL_GPU_App.dir/build.make CMakeFiles/SDL_GPU_App.dir/build
-.PHONY : SDL_GPU_App/fast
+app/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/build
+.PHONY : app/fast
+
+src/init.o: src/init.cpp.o
+.PHONY : src/init.o
+
+# target to build an object file
+src/init.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/src/init.cpp.o
+.PHONY : src/init.cpp.o
+
+src/init.i: src/init.cpp.i
+.PHONY : src/init.i
+
+# target to preprocess a source file
+src/init.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/src/init.cpp.i
+.PHONY : src/init.cpp.i
+
+src/init.s: src/init.cpp.s
+.PHONY : src/init.s
+
+# target to generate assembly for a file
+src/init.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/src/init.cpp.s
+.PHONY : src/init.cpp.s
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
 # target to build an object file
 src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SDL_GPU_App.dir/build.make CMakeFiles/SDL_GPU_App.dir/src/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/src/main.cpp.o
 .PHONY : src/main.cpp.o
 
 src/main.i: src/main.cpp.i
@@ -142,7 +166,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SDL_GPU_App.dir/build.make CMakeFiles/SDL_GPU_App.dir/src/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -150,7 +174,7 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SDL_GPU_App.dir/build.make CMakeFiles/SDL_GPU_App.dir/src/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/app.dir/build.make CMakeFiles/app.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
 # Help Target
@@ -161,7 +185,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... SDL_GPU_App"
+	@echo "... app"
+	@echo "... src/init.o"
+	@echo "... src/init.i"
+	@echo "... src/init.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
