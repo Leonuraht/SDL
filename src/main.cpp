@@ -3,6 +3,7 @@
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_render.h>
 #include <cstdlib>
+#include <SDL3_image/SDL_image.h>
 
 int main() {
     init();
@@ -12,7 +13,7 @@ int main() {
     bool quit = false;
     while (!quit) {
         while (SDL_PollEvent(&e) == true) {
-            if (e.type == SDL_EVENT_QUIT)
+            if (e.type == SDL_EVENT_QUIT || e.key.key == SDLK_ESCAPE)
                 quit = true;
         }
         SDL_SetRenderDrawColor(renderer, 0x34, 0x56, 0xA2, 0xFF);
